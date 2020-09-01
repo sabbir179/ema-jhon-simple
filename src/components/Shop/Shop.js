@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import fakeData from '../../fakeData';
 import './Shop.css'
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
-import  { addToDatabaseCart } from '../../utilities/databaseManager'
+import  { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager'
 
 
 const Shop = () => {
@@ -11,20 +11,47 @@ const Shop = () => {
     const [products, setProducts] = useState(firstTen);
     const [cart, setCart] = useState([]);
     
+    // we show cart information in Shop page 
+    useEffect(() => {
+        const savedCart = getDatabaseCart();
+        const productKeys = Object.keys(savedCart); // we can get all product's key from database
+        const previousCart = productKeys.map(existingKey => {
+            const product = fakeData.find( pd => pd.key === existingKey );
+            product.quantity = savedCart[existingKey];
+            // console.log(existingKey, savedCart[existingKey]);
+            return product;
+        } )
+        setCart(previousCart);
+    }, [])
+
+
+
 
     const handleAddProduct = (product) => {
+        const toBeAddedKey = product.key;
+        const sameProduct = cart.find(pd => pd.key === toBeAddedKey);
+        let count =1;
+        let newCart;
+        if(sameProduct){
+            count = sameProduct.quantity + 1;
+            sameProduct.quantity = count;
+            const others = cart.filter(pd => pd.key !== toBeAddedKey);
+            newCart = [...others, sameProduct];
+        }
+        else {
+            product.quantity = 1;
+            newCart = [...cart, product];
+        }
         
-        const newCart = [...cart, product];
         setCart(newCart); // add new product.
 
         // add to local storage [ from utilities file]
-        const sameProduct = newCart.filter(pd => pd.key === product.key);
-        const count = sameProduct.length;
+        
         addToDatabaseCart(product.key, count);
     }
 
     return (
-        <div className="shop-container">
+        <div className="twin-container">
            <div className="product-container">
                {
                    products.map( pd => <Product 

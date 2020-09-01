@@ -1,5 +1,6 @@
-.shop-container{
+.twin-container{
     display: flex;
+    padding-top: 50px;
 }
 
 .product-container{
