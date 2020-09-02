@@ -4,14 +4,14 @@ import './Shop.css'
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
 import  { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager'
-
+import { Link } from 'react-router-dom';
 
 const Shop = () => {
     const firstTen = fakeData.slice(0,10);
     const [products, setProducts] = useState(firstTen);
     const [cart, setCart] = useState([]);
     
-    // we show cart information in Shop page 
+    // we show cart information in Shop page if we already added any data in the cart [multiple page]
     useEffect(() => {
         const savedCart = getDatabaseCart();
         const productKeys = Object.keys(savedCart); // we can get all product's key from database
@@ -63,7 +63,10 @@ const Shop = () => {
                }
            </div> 
            <div className="cart-container">
-               <Cart cart= {cart} ></Cart>
+               <Cart cart= {cart} >
+               <Link to ="/review">
+                 <button className="main-button" > Review order</button> </Link>
+               </Cart>
            </div>
             
         </div>

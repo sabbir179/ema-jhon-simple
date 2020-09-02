@@ -5,9 +5,9 @@ import Product from '../Product/Product';
 import './ProductDetail.css'
 
 const ProductDetail = () => {
-    const {productKey} = useParams();
+    const {productKey} = useParams(); // custom hook, which is connected with product value
     const product = fakeData.find(pd => pd.key === productKey);
-    console.log(product);
+    // console.log(product);
     return (
         <div>
             <h1 className="detail" > Product  Detail</h1>
